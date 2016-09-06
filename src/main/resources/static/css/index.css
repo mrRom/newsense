@@ -1,0 +1,75 @@
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+.nav-color {
+	background-color: #f5f5f5;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus {
+    background-color: #ddd;
+}
+
+.container {
+	padding-top: 3px;
+    margin: auto;
+    width: 837px;
+}
+
+.left-container {
+	float: left;
+	width: 200px;
+	margin: auto;
+	background-color: #f1f1f1;
+}
+
+.center-container {
+    float: left;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.right-container {
+    float: left;
+    width: 200px;
+    margin: auto;
+    background-color: #f1f1f1;
+}
+
+.newsense-panel {
+	width: 400px;
+}
+
+.article {
+	width: 400px;
+}
+
+.article-content {
+	width: 300px;
+}
+
+.article-more {
+   width: 80px; 
+}
+
+.article-info {
+    color: #ddd
+}
+
+.stats-item {
+	border-bottom: 1px solid #ddd;
+}
+
+.notification-bubble {
+    background: red;
+    color: white;
+    display: inline-block;
+    width: 20px;
+    line-height: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.submit-form {
+	padding: 0px 10px 10px 10px; 
+}

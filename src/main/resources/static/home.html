@@ -1,0 +1,118 @@
+<div class="left-container">
+	<div ng-show="authenticated" ng-controller='SitesCtrl as sctrl'
+		class="panel panel-default">
+		<!-- <p>The ID is {{controller.greeting.id}}</p>
+		<p>The content is {{controller.greeting.content}}</p> -->
+		<div class="panel-heading">
+			<span class="lead">Sources</span>
+		</div>
+		<form ng-submit="sctrl.submitListOfSites()">
+			<div class="form-group">
+				<div class="checkbox">
+					<li class="list-group-item" ng-repeat="s in sctrl.ListOfSites">
+						<label><input type="checkbox" name="selectedSites[]" value="{{s}}" 
+						    ng-checked="sctrl.selection.indexOf(s) > -1" 
+						    ng-click="sctrl.toggleSelection(s)">
+							<span>{{s}}</span>
+						</label>
+					</li>
+				</div>
+				{{sctrl.selection}}
+			</div>
+			<div class="submit-form">
+				<button type="submit" class="btn btn-primary btn-xs">Submit</button>
+			</div>
+		</form>
+	</div>
+	<div ng-show="!authenticated" class="panel panel-default">
+		<div class="panel-heading">
+			<span class="lead">Sources</span>
+		</div>
+		<p>Login to choose sites, you want to fetch news from.</p>
+	</div>
+</div>
+<div class="center-container">
+	<div class="generic-container">
+		<div class="panel panel-default newsense-panel"
+			ng-controller='ArticlesScrollCtrl'>
+			<!-- Default panel contents -->
+			<div class="panel-heading">
+				<a ng-href="#"><div class="notification-bubble" ng-app
+						ng-controller="NotificationCtrl" ng-click="reloadRoute()">
+						<span>{{count}}</span>
+					</div></a> <span class="lead">Articles:</span>
+			</div>
+			<div class="list-group infscrollcontainer"
+				infinite-scroll='news.nextPage()'
+				infinite-scroll-disabled='news.busy' infinite-scroll-distance='0'>
+				<li class="list-group-item" ng-repeat="u in news.items">
+					<div class="article">
+						<table>
+							<td><div class="article-content">
+									<a ng-href="{{u.url}}" target="_blank"><span
+										ng-bind="u.title"></span></a>
+								</div></td>
+							<td><div ng-controller="MoreCtrl" class="container">
+									<button ng-click="toggleModal()" class="btn btn-success btn-xs">
+										more...</button>
+									<modal title="Statistics" visible="showModal">
+									<div class="stats"
+										ng-controller="ShowHideSimilarCtrl as shctrl">
+										<div class=stats-item ng-click="showHideSimilar(u.id)">
+											<h4>Similar News</h4>
+										</div>
+										<div class=stats-item-similarnews ng-show="showMe">
+											<div>
+												<table class="table">
+													<thead>
+														<tr>
+															<th>Quantity</th>
+															<th>Sources</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>{{shctrl.Articles.length}}</td>
+															<td>
+																<li class="list-group-item"
+																ng-repeat="ar in shctrl.Articles">
+																	<div>
+																		<a ng-href="{{ar.url}}" target="_blank"><span
+																			ng-bind="ar.title"></span></a>
+																	</div>
+																	<div class="article-info">
+																		<span>{{ ar.url | domain }}</span>
+																	</div>
+															</li>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class=stats-item>
+											<div class=stats-item-similarnews>
+												<h4>Sentiment Analysis</h4>
+											</div>
+										</div>
+									</div>
+									</modal>
+								</div></td>
+						</table>
+					</div>
+				</li>
+				<div ng-show='news.busy'>Loading data...</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="right-container">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<span class="lead">Categories</span>
+		</div>
+		<div>
+			<p>Some Categories</p>
+		</div>
+	</div>
+</div>
