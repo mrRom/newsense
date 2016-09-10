@@ -24,15 +24,17 @@ newsense.controller('SitesCtrl', [
 						console.error('Error while fetching ListOfSites');
 				});
 			};
-			/*self.fetchAllSelectedSites = function() {
-				SitesService.fetchAllSelectedSites().then(
+			self.fetchSelectedSites = function() {
+				SitesService.fetchSelectedSites().then(
 					function(d) {
 						self.selection = d;
+						console.log(d)
 					}, function(errResponse) {
-						console.error('Error while fetching ListOfSelectedSites');
+						console.error('Error while fetching Selected Sites');
 				});
-			};*/
+			};
 			self.fetchAllSites();
+			self.fetchSelectedSites();
 			self.toggleSelection = function toggleSelection(site) {
 			    var idx = self.selection.indexOf(site);
 			    // is currently selected
@@ -46,8 +48,7 @@ newsense.controller('SitesCtrl', [
 			  };
 			
 			self.submitListOfSites = function() {
-				// TODO
-				// Have to write appropriate service
+				SitesService.submitListOfSites(self.selection);
 			}
 } ]);
 

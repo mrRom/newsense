@@ -27,21 +27,35 @@ public class SitesDaoImpl implements SitesDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> getAllSelectedByUserSites(String userName) {
-	return (List<String>) sessionFactory.getCurrentSession().createSQLQuery(
-		"select * from selected_sites s where s.user_name = :userName")
-		.setParameter("userName", userName);
+	//TODO
+	//get rid of native sql
+	return sessionFactory.getCurrentSession().createSQLQuery(
+		"select site from selected_sites where user_name = :userName")
+		.setParameter("userName", userName).list();
     }
 
     @Override
     public void createUpdateSelectedUserSites(String userName, List<String> sites) {
-	List<String> curentlySelectedSites = getAllSelectedByUserSites(userName);
+	//TODO
+	//get rid of native sql
+	deleteUserSites(userName);
+	System.out.println(sites);
+	String s = ""; 
 	for (String site: sites) {
-	    if (!curentlySelectedSites.contains(site)){
-		sessionFactory.getCurrentSession().createSQLQuery(
-			"insert into selected_sites (user_name, site) values (:userName, :site)")
-			.setParameter("userName", userName)
-			.setParameter("site", site);
-	    }
+	    s = s + "(\"" + userName + "\",\"" + site + "\"),";
 	}
+	s = s.substring(0, s.length()-1) + ";";
+	System.out.println(s);
+	    sessionFactory.getCurrentSession().createSQLQuery(
+			"insert into selected_sites (user_name, site) values" + s).executeUpdate();
+    }
+
+    @Override
+    public void deleteUserSites(String userName) {
+	//TODO
+	//get rid of native sql
+	sessionFactory.getCurrentSession().createSQLQuery(
+		"delete from selected_sites where user_name=:userName")
+		.setParameter("userName", userName).executeUpdate();
     }
 }

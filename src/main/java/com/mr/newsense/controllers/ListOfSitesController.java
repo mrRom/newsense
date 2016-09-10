@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,22 +45,15 @@ public class ListOfSitesController {
 		.getAuthentication().getName();
 	List<String> sites = new ArrayList<String>();
 	sites = sitesDao.getAllSelectedByUserSites(username);
-	if(sites.isEmpty()){
-            return new ResponseEntity<List<String>>(HttpStatus.NO_CONTENT);
-        }
 	return new ResponseEntity<List<String>>(sites, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/selectedSites", method = RequestMethod.POST)
-    public ResponseEntity<List<String>> addToSelectedSites(){
-	//TODO
+    public ResponseEntity<String> selectedSites(@RequestBody List<String> sites){
 	final String username = SecurityContextHolder.getContext()
 		.getAuthentication().getName();
-	List<String> sites = new ArrayList<String>();
-	sites = sitesDao.getAllSelectedByUserSites(username);
-	if(sites.isEmpty()){
-            return new ResponseEntity<List<String>>(HttpStatus.NO_CONTENT);
-        }
-	return new ResponseEntity<List<String>>(sites, HttpStatus.OK);
+	log.info(username + "selected:" + sites);
+	sitesDao.createUpdateSelectedUserSites(username, sites);
+	return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

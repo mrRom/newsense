@@ -59,7 +59,7 @@ public class UiApplication {
     public Map<String, Object> home() {
 	Map<String, Object> model = new HashMap<String, Object>();
 	model.put("id", UUID.randomUUID().toString());
-	model.put("content", "Hello World");
+	model.put("content", "newsense");
 	return model;
     }
 

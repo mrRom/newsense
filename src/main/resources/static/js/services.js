@@ -29,7 +29,18 @@ newsense.factory('SitesService', [ '$http', '$q', function($http, $q) {
 				console.error('Error while fetching sites');
 				return $q.reject(errResponse);
 			});
-		}
+		},
+		submitListOfSites : function(selection) {
+			return $http.post('selectedSites', selection);
+		},
+		fetchSelectedSites : function() {
+			return $http.get('selectedSites').then(function(response) {
+				return response.data;
+			}, function(errResponse) {
+				console.error('Error while fetching selected sites');
+				return $q.reject(errResponse);
+			});
+		},
 		/*fetchSelectedSites : function() {
 			return $http.get('selectedSites').then(function(response) {
 				return response.data;
