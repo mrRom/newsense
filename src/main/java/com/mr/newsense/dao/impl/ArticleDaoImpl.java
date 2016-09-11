@@ -30,17 +30,28 @@ public class ArticleDaoImpl implements ArticleDao {
     }
 
     @Override
-    public List<Article> getAllArticles() {
+    public List<Article> getAllArticles(List<String> sources) {
 	@SuppressWarnings("unchecked")
 	List<Article> list = (List<Article>) sessionFactory.getCurrentSession()
 		.createCriteria(Article.class).list();
 	return list;
     }
-
+    
     @Override
-    public List<Article> getMoreArticles(int quantity, int step) {
-	Query query = sessionFactory.getCurrentSession().createQuery(
-		"from Article order by publishDate desc");
+    public List<Article> getMoreArticles(int quantity, int step, List<String> sources) {
+	Query query;
+	if (sources.size()>0){
+	    String condition = " where";
+	    for (String source: sources) {
+		condition = condition + " url like \'%" + source + "%\' or"; 
+	    }
+	    condition = condition.substring(0, condition.length() - 2);
+	    query = sessionFactory.getCurrentSession().createQuery(
+			"from Article" + condition + "order by publishDate desc");
+	} else {
+	    query = sessionFactory.getCurrentSession().createQuery(
+			"from Article order by publishDate desc");
+	}
 	query.setFirstResult(quantity * step);
 	query.setMaxResults(quantity);
 	List<Article> result = query.list();
