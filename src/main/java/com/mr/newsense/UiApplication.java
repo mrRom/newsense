@@ -22,8 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,8 +34,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.util.WebUtils;
 
 @SpringBootApplication
@@ -48,13 +44,7 @@ public class UiApplication {
     public Principal user(Principal user) {
 	return user;
     }
-
-    /*
-     * @RequestMapping("/register") public ResponseEntity<String> register() {
-     * 
-     * return new ResponseEntity<String>(HttpStatus.OK); }
-     */
-
+     
     @RequestMapping("/resource")
     public Map<String, Object> home() {
 	Map<String, Object> model = new HashMap<String, Object>();
@@ -112,6 +102,8 @@ public class UiApplication {
 	    WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+	    //TODO
+	    //have to implement proper security
 	    http.httpBasic()
 		    .and()
 		    .authorizeRequests()

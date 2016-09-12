@@ -98,12 +98,14 @@ newsense.factory('NotificationService', function() {
 newsense.factory('UserService', function($http) {
 	var service = {};
 
-	service.Create = Create;
+	service.createUser = createUser;
 
 	return service;
 
-	function Create(user) {
-		return $http.post('/register', user).then(handleSuccess,
+	function createUser(username, password) {
+		var userdata = '{"username":"' + username + '", "password":"' + password + '"}';
+		console.log(userdata);
+		return $http.post('/register', userdata).then(handleSuccess,
 				handleError('Error creating user'));
 	}
 

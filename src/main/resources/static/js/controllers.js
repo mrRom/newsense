@@ -172,9 +172,10 @@ newsense.controller('home', function($http) {
 
 newsense.controller('registration', function($location, UserService) {
 	var self = this;
+	self.dataLoading = true;
 	self.register = function() {
 		self.dataLoading = true;
-        UserService.Create(self.user)
+        UserService.createUser(self.username, self.password)
             .then(function (response) {
                 if (response.success) {
                     $location.path('/login');
