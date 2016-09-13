@@ -36,24 +36,22 @@ CREATE TABLE IF NOT EXISTS `newsensedb`.`texts` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE IF NOT EXISTS `newsensedb`.`users` (
-  `username` VARCHAR(45) NOT NULL,
-  `password` VARCHAR(45) NOT NULL,
-  `enabled` TINYINT(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`username`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+CREATE TABLE `users` (
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `enabled` int(11) NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `newsensedb`.`user_roles` (
-  `user_role_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(45) NOT NULL,
-  `role` VARCHAR(45) NOT NULL,
+CREATE TABLE `user_roles` (
+  `user_role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(45) NOT NULL,
+  `role` varchar(45) NOT NULL,
   PRIMARY KEY (`user_role_id`),
-  UNIQUE INDEX `uni_username_role` (`role` ASC, `username` ASC),
-  INDEX `fk_username_idx` (`username` ASC),
-  CONSTRAINT `fk_username`
-    FOREIGN KEY (`username`)
-    REFERENCES `newsensedb`.`users` (`username`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+  UNIQUE KEY `uni_username_role` (`role`,`username`),
+  KEY `fk_username_idx` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
