@@ -7,11 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mr.newsense.dao.ArticleDao;
+import com.mr.newsense.dao.UserDao;
 import com.mr.newsense.models.Article;
+import com.mr.newsense.models.User;
 
 @RestController
 public class NotificationController {
@@ -19,9 +22,14 @@ public class NotificationController {
 	    .getLogger(NewsController.class);
     @Autowired
     ArticleDao articleDao;
+    @Autowired
+    UserDao userDao;
 
     @RequestMapping("/notify")
     public ResponseEntity<String> sendMessage(HttpServletRequest request) {
+	final String username = SecurityContextHolder.getContext()
+		.getAuthentication().getName();
+	User user = userDao.getUserByName(username);
 	Article article = (Article) request.getSession().getAttribute(
 		"lastShowedArticle");
 	try {
@@ -31,7 +39,7 @@ public class NotificationController {
 	}
 	if (article != null){
         	long numberOfArticlesAfterDate = articleDao.getNumberOfArticlesAfterDate(article
-        		.getPublishDate());
+        		.getPublishDate(), user);
         	log.debug(article.toString());
         	log.debug("" + numberOfArticlesAfterDate);
         	if (numberOfArticlesAfterDate > 0) {

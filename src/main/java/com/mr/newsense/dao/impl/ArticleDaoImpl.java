@@ -3,6 +3,7 @@ package com.mr.newsense.dao.impl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -12,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mr.newsense.dao.ArticleDao;
 import com.mr.newsense.models.Article;
+import com.mr.newsense.models.Source;
+import com.mr.newsense.models.User;
 
 @Repository("articleDao")
 @Transactional
@@ -81,9 +84,21 @@ public class ArticleDaoImpl implements ArticleDao {
     }
     
     @Override
-    public long getNumberOfArticlesAfterDate(Date date) {
+    public long getNumberOfArticlesAfterDate(Date date, User user) {
+	Set<Source> sources = user.getSources();
+	String sql = "select count(*) FROM Article AS A WHERE A.publishDate > :endDate";
+	if (user!=null){
+	    sql = sql + " AND ( ";
+	    StringBuffer sb = new StringBuffer(sql);
+		for (Source s: sources){
+		    sb.append("A.url LIKE \'%"+s.getHost()+"%\' OR ");
+		}
+	    sb.delete(sb.length() - 3, sb.length());
+	    sb.append(")");
+	    sql = sb.toString();
+	}
 	long result = (long) sessionFactory.getCurrentSession()
-	.createQuery("select count(*) FROM Article AS c WHERE c.publishDate > :endDate")
+	.createQuery(sql)
 	.setParameter("endDate", date)
 	.uniqueResult();
 	return result;
