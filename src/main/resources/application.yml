@@ -6,10 +6,12 @@ logging:
     org.springframework.security: INFO
 spring:
   datasource:
+    driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/newsensedb
     username: root
     password: pass
   jpa:
+    database: mysql
     hibernate:
       ddl-auto: validate
     properties:

@@ -1,6 +1,7 @@
 package com.mr.newsense.dao.impl;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +24,31 @@ public class UserDaoImpl implements UserDao {
 	this.sessionFactory = sessionFactory;
     }
     
+    @Override
     public void createUser(User user){
 	sessionFactory.getCurrentSession().save(user);
-	//TODO
-	sessionFactory.getCurrentSession().createSQLQuery(
-		"insert into user_roles (username, role) values (\'" + user.getUsername() + "\', \'ROLE_USER\')")
-		.executeUpdate();
+    }
+
+    @Override
+    public User getUserByName(String name) {
+	return (User)sessionFactory.getCurrentSession().createCriteria(User.class)
+		.add(Restrictions.eq("username", name)).uniqueResult();
+    }
+
+    @Override
+    public User getUserById(Long id) {
+	return (User)sessionFactory.getCurrentSession().get(User.class, id);
+    }
+
+    @Override
+    public void updateUser(User user) {
+	sessionFactory.getCurrentSession().update(user);
+    }
+
+    @Override
+    public void deleteUser(User user) {
+	sessionFactory.getCurrentSession().delete(
+		sessionFactory.getCurrentSession()
+		.contains(user) ? user : sessionFactory.getCurrentSession().merge(user));
     }
 }

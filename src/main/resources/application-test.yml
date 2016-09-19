@@ -1,0 +1,21 @@
+security:
+  user:
+    password: password
+logging:
+  level:
+    org.springframework.security: DEBUG
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/newsensedbtest?createDatabaseIfNotExist=true
+    username: root
+    password: pass
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: create-drop
+      namingStrategy: org.hibernate.cfg.EJB3NamingStrategy
+    show_sql: true
+    properties:
+        hibernate:
+          current_session_context_class: org.springframework.orm.hibernate4.SpringSessionContext

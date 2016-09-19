@@ -4,16 +4,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "news", catalog = "newsensedb")
-public class Article{
-    @Id
-    @GeneratedValue
-    private Long id;
+@Table(name = "news")
+public class Article extends Model{
+    private static final long serialVersionUID = -4231739104425789372L;
+
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
@@ -25,12 +22,22 @@ public class Article{
     @Column(name = "publish_date", nullable = false, columnDefinition="DATETIME")
     private Date publishDate;
     
-    public Long getId() {
-        return id;
+    public Article() {
+	super();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Article(Long id) {
+	super(id);
+    }
+
+    public Article(String title, String url, String autor, String description,
+	    Date publishDate) {
+	super();
+	this.title = title;
+	this.url = url;
+	this.autor = autor;
+	this.description = description;
+	this.publishDate = publishDate;
     }
 
     public String getTitle() {
@@ -114,7 +121,7 @@ public class Article{
 
     @Override
     public String toString() {
-	return "Article [id=" + id + ", title=" + title + ", url=" + url
+	return "Article [title=" + title + ", url=" + url
 		+ ", autor=" + autor + ", description=" + description
 		+ ", publishDate=" + publishDate + "]";
     }

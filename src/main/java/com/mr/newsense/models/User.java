@@ -1,17 +1,23 @@
 package com.mr.newsense.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "users", catalog = "newsensedb")
-public class User {
-    @Id
-    @GeneratedValue
-    private int id;
+@Table(name = "users")
+public class User extends Model{
+
+    private static final long serialVersionUID = 3074119656569223847L;
+
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
@@ -19,12 +25,21 @@ public class User {
     @Column (nullable = false)
     private int enabled;
     
-    public int getId() {
-        return id;
+    @ManyToMany (fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinTable(name = "selected_sources", joinColumns = {
+		@JoinColumn(name = "user_id", nullable = false) },
+		inverseJoinColumns = { @JoinColumn(name = "source_id",
+				nullable = false)})
+    private Set<Source> sources = new HashSet<>();
+
+    public User() {
+	super();
     }
-    public void setId(int id) {
-        this.id = id;
+    
+    public User(Long id) {
+	super(id);
     }
+
     public String getUsername() {
         return username;
     }
@@ -43,9 +58,18 @@ public class User {
     public void setEnabled(int enabled) {
         this.enabled = enabled;
     }
+    
+    public Set<Source> getSources() {
+        return sources;
+    }
+
+    public void setSources(Set<Source> sources) {
+        this.sources = sources;
+    }
+
     @Override
     public String toString() {
-	return "User [id=" + id + ", username=" + username + ", password="
+	return "User [username=" + username + ", password="
 		+ password + ", enabled=" + enabled + "]";
     }
 }

@@ -23,11 +23,14 @@ CREATE TABLE IF NOT EXISTS `newsensedb`.`news` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE IF NOT EXISTS `newsensedb`.`selected_sites` (
-  `user_name` VARCHAR(120) NOT NULL,
-  `site` VARCHAR(120) NOT NULL)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+CREATE TABLE `selected_sources` (
+  `user_id` bigint(20) NOT NULL,
+  `source_id` bigint(20) NOT NULL,
+  KEY `user_id_idx` (`user_id`),
+  KEY `source_id_idx` (`source_id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `source_id` FOREIGN KEY (`source_id`) REFERENCES `sources` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `newsensedb`.`texts` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -40,7 +43,7 @@ CREATE TABLE `users` (
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   `enabled` int(11) NOT NULL DEFAULT '1',
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `id_UNIQUE` (`id`)

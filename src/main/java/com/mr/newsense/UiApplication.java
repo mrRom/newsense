@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.annotation.Order;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.vendor.HibernateJpaSessionFactoryBean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -55,17 +54,6 @@ public class UiApplication {
 
     public static void main(String[] args) {
 	SpringApplication.run(UiApplication.class, args);
-    }
-
-    @Bean(name = "dataSource")
-    public DriverManagerDataSource dataSource() {
-	DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-	driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-	driverManagerDataSource
-		.setUrl("jdbc:mysql://localhost:3306/newsensedb");
-	driverManagerDataSource.setUsername("root");
-	driverManagerDataSource.setPassword("pass");
-	return driverManagerDataSource;
     }
 
     @Bean

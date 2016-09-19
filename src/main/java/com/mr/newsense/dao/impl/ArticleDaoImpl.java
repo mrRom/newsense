@@ -1,6 +1,5 @@
 package com.mr.newsense.dao.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +36,7 @@ public class ArticleDaoImpl implements ArticleDao {
 	return list;
     }
     
+    @SuppressWarnings("unchecked")
     @Override
     public List<Article> getMoreArticles(int quantity, int step, List<String> sources) {
 	Query query;
@@ -59,6 +59,7 @@ public class ArticleDaoImpl implements ArticleDao {
 	return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Article> getArticles(int period) {
 	Calendar c = Calendar.getInstance();
@@ -81,8 +82,6 @@ public class ArticleDaoImpl implements ArticleDao {
     
     @Override
     public long getNumberOfArticlesAfterDate(Date date) {
-	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	String endDate = format.format(date);
 	long result = (long) sessionFactory.getCurrentSession()
 	.createQuery("select count(*) FROM Article AS c WHERE c.publishDate > :endDate")
 	.setParameter("endDate", date)

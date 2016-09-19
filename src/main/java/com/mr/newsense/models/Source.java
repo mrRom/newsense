@@ -1,27 +1,34 @@
 package com.mr.newsense.models;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
-@Entity(name="links")
-public class Link {
-    @Id
-    @GeneratedValue
-    private Long id;
+@Entity
+@Table(name="sources")
+public class Source extends Model{
+
+    private static final long serialVersionUID = 4447727038104003771L;
+    
+    public Source() {
+	super();
+    }
+
+    public Source(Long id) {
+	super(id);
+    }
+
     @Column(name = "linkvalue", unique = true, nullable = false)
     private String url;
     @Column(name = "host", unique = true, nullable = false)
     private String host;
     
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToMany(mappedBy="sources", fetch=FetchType.LAZY)
+    private Set<User> users;
 
     public String getUrl() {
         return url;
@@ -41,7 +48,7 @@ public class Link {
 
     @Override
     public String toString() {
-	return "Link [id=" + id + ", url=" + url + ", host=" + host + "]";
+	return "Source [url=" + url + ", host=" + host + "]";
     }
 
     @Override
@@ -61,7 +68,7 @@ public class Link {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	Link other = (Link) obj;
+	Source other = (Source) obj;
 	if (host == null) {
 	    if (other.host != null)
 		return false;

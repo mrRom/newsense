@@ -2,6 +2,7 @@ package com.mr.newsense.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mr.newsense.dao.LinkDao;
-import com.mr.newsense.dao.SitesDao;
-import com.mr.newsense.models.Link;
+import com.mr.newsense.dao.SourceDao;
+import com.mr.newsense.dao.UserDao;
+import com.mr.newsense.models.Source;
+import com.mr.newsense.models.User;
 
 @RestController
 public class ListOfSitesController {
@@ -24,13 +27,16 @@ public class ListOfSitesController {
     @Autowired
     LinkDao linkDao;
     @Autowired
-    SitesDao sitesDao;
+    UserDao userDao;
+    @Autowired
+    SourceDao sourceDao;
+    
     
     @RequestMapping(value = "/listOfSites", method = RequestMethod.GET)
     public ResponseEntity<List<String>> getAllSites(){
 	List<String> sites = new ArrayList<String>();
-	List<Link> links = (List<Link>) linkDao.findAll();
-	for (Link link : links) {
+	List<Source> links = (List<Source>) linkDao.findAll();
+	for (Source link : links) {
 	    sites.add(link.getHost());
 	}
 	if(sites.isEmpty()){
@@ -44,7 +50,10 @@ public class ListOfSitesController {
 	final String username = SecurityContextHolder.getContext()
 		.getAuthentication().getName();
 	List<String> sites = new ArrayList<String>();
-	sites = sitesDao.getAllSelectedByUserSites(username);
+	Set<Source> sources = userDao.getUserByName(username).getSources();
+	for (Source s: sources){
+	    sites.add(s.getHost());
+	}
 	return new ResponseEntity<List<String>>(sites, HttpStatus.OK);
     }
     
@@ -53,7 +62,9 @@ public class ListOfSitesController {
 	final String username = SecurityContextHolder.getContext()
 		.getAuthentication().getName();
 	log.info(username + "selected:" + sites);
-	sitesDao.createUpdateSelectedUserSites(username, sites);
+	User user = userDao.getUserByName(username);
+	user.setSources(sourceDao.selectSourcesByHostNames(sites));
+	userDao.updateUser(user);
 	return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
