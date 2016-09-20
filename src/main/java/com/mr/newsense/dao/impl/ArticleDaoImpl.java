@@ -85,9 +85,9 @@ public class ArticleDaoImpl implements ArticleDao {
     
     @Override
     public long getNumberOfArticlesAfterDate(Date date, User user) {
-	Set<Source> sources = user.getSources();
 	String sql = "select count(*) FROM Article AS A WHERE A.publishDate > :endDate";
 	if (user!=null){
+	    Set<Source>sources = user.getSources();
 	    sql = sql + " AND ( ";
 	    StringBuffer sb = new StringBuffer(sql);
 		for (Source s: sources){
