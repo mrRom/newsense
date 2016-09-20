@@ -1,16 +1,6 @@
 DROP DATABASE IF EXISTS `newsensedb`;
 CREATE SCHEMA `newsensedb` DEFAULT CHARACTER SET utf8;
 
-CREATE TABLE IF NOT EXISTS `newsensedb`.`links` (
-  `linkvalue` VARCHAR(250) NOT NULL,
-  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-  `host` VARCHAR(80) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `linkvalue_UNIQUE` (`linkvalue` ASC),
-  UNIQUE INDEX `source_UNIQUE` (`host` ASC))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
 CREATE TABLE IF NOT EXISTS `newsensedb`.`news` (
   `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(250) NOT NULL,
@@ -41,20 +31,22 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE `users` (
   `username` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
-  `enabled` int(11) NOT NULL DEFAULT '1',
-  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `password` varchar(60) NOT NULL,
+  `enabled` bit(1) NOT NULL,
+  `id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+SELECT * FROM newsensedb.selected_sources;
 
 CREATE TABLE `user_roles` (
-  `user_role_id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(45) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `role` varchar(45) NOT NULL,
-  PRIMARY KEY (`user_role_id`),
-  UNIQUE KEY `uni_username_role` (`role`,`username`),
-  KEY `fk_username_idx` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  `username` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_stlxfukw77ov5w1wo1tm3omca` (`role`,`username`),
+  KEY `FK_9ry105icat2dux14oyixybw9l` (`username`),
+  CONSTRAINT `FK_9ry105icat2dux14oyixybw9l` FOREIGN KEY (`username`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
