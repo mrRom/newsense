@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,12 +19,12 @@ public class User extends Model{
 
     private static final long serialVersionUID = 3074119656569223847L;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 45)
     private String username;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 60)
     private String password;
     @Column (nullable = false)
-    private int enabled;
+    private boolean enabled;
     
     @ManyToMany (fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(name = "selected_sources", joinColumns = {
@@ -31,7 +32,10 @@ public class User extends Model{
 		inverseJoinColumns = { @JoinColumn(name = "source_id",
 				nullable = false)})
     private Set<Source> sources = new HashSet<>();
-
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private Set<UserRole> userRole = new HashSet<>();
+    
     public User() {
 	super();
     }
@@ -52,19 +56,29 @@ public class User extends Model{
     public void setPassword(String password) {
         this.password = password;
     }
-    public int getEnabled() {
+    
+    public boolean isEnabled() {
         return enabled;
     }
-    public void setEnabled(int enabled) {
+
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-    
+
     public Set<Source> getSources() {
         return sources;
     }
 
     public void setSources(Set<Source> sources) {
         this.sources = sources;
+    }
+
+    public Set<UserRole> getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(Set<UserRole> userRole) {
+        this.userRole = userRole;
     }
 
     @Override

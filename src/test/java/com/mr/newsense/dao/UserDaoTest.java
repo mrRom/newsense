@@ -33,7 +33,7 @@ public class UserDaoTest {
     public void createUserTest(){
 	user.setUsername("test");
 	user.setPassword("test");
-	user.setEnabled(1);
+	user.setEnabled(true);
 	source = new Source();
 	source.setHost("test1");
 	source.setUrl("test1/test1");
