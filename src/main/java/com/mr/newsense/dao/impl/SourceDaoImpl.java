@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,16 +29,17 @@ public class SourceDaoImpl implements SourceDao{
 	this.sessionFactory = sessionFactory;
     }
     
+    @SuppressWarnings("unchecked")
     @Override
     public Set<Source> selectSourcesByHostNames(List<String> hosts) {
-	//TODO
-	//Have to make it without loop (as one select statement)
-	Set<Source> sources = new HashSet<Source>();
+	Set<Source> sources;
+	Disjunction disjunction = Restrictions.disjunction();
 	for (String host: hosts){
-	    sources.add((Source)sessionFactory.getCurrentSession().createCriteria(Source.class)
-			.add(Restrictions.eq("host", host))
-			.uniqueResult());
+	    disjunction.add(Restrictions.eq("host", host));
 	}
+	sources = new HashSet<Source>(sessionFactory.getCurrentSession().createCriteria(Source.class)
+		.add(disjunction)
+		.list());
 	return sources;
     }
 }

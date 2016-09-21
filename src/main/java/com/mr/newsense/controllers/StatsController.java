@@ -25,7 +25,7 @@ public class StatsController {
     
     @RequestMapping(value = "/similar/{id}", method = RequestMethod.GET)
     public ResponseEntity<List<Article>> getAllStats(@PathVariable long id) {
-	List<Article> articles = articleDao.getArticles(2);
+	List<Article> articles = articleDao.getArticles(-2);
 	Article art = articleDao.getArticleById(id);
 	List<Article> result = new ArrayList<Article>();
 	//TODO

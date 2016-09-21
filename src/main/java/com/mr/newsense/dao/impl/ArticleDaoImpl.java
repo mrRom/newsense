@@ -5,8 +5,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +23,7 @@ import com.mr.newsense.models.User;
 @Repository("articleDao")
 @Transactional
 public class ArticleDaoImpl implements ArticleDao {
-
+    
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -42,39 +46,35 @@ public class ArticleDaoImpl implements ArticleDao {
     @SuppressWarnings("unchecked")
     @Override
     public List<Article> getMoreArticles(int quantity, int step, List<String> sources) {
-	Query query;
+	Disjunction disjunction = Restrictions.disjunction();
 	if (sources.size()>0){
-	    String condition = " where";
-	    for (String source: sources) {
-		condition = condition + " url like \'%" + source + "%\' or"; 
-	    }
-	    condition = condition.substring(0, condition.length() - 2);
-	    query = sessionFactory.getCurrentSession().createQuery(
-			"from Article" + condition + "order by publishDate desc");
-	} else {
-	    query = sessionFactory.getCurrentSession().createQuery(
-			"from Article order by publishDate desc");
+    	    for (String source: sources) {
+    		disjunction.add(Restrictions.like("url", source, MatchMode.ANYWHERE));
+    	    }
 	}
-	query.setFirstResult(quantity * step);
-	query.setMaxResults(quantity);
-	List<Article> result = query.list();
-	System.out.println(result.size());
+	List<Article> result = sessionFactory.getCurrentSession()
+		.createCriteria(Article.class)
+		.add(disjunction)
+		.addOrder(Order.desc("publishDate"))
+		.setFirstResult(quantity * step)
+		.setMaxResults(quantity)
+		.list();
 	return result;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public List<Article> getArticles(int period) {
+	//period - negative number. Days from current date.
 	Calendar c = Calendar.getInstance();
-	c.add(Calendar.DAY_OF_YEAR, -2);
+	c.add(Calendar.DAY_OF_YEAR, period);
 	Date fromDate = c.getTime();
 	Date toDate = new Date();
-	List<Article> list = sessionFactory
-		.getCurrentSession()
-		.createQuery(
-			"from Article where publishDate BETWEEN :fromDate AND :toDate")
-		.setParameter("fromDate", fromDate)
-		.setParameter("toDate", toDate).list();
+	List<Article> list = sessionFactory.getCurrentSession()
+		.createCriteria(Article.class)
+		.add(Restrictions.ge("publishDate", fromDate))
+		.add(Restrictions.lt("publishDate", toDate))
+		.list();
 	return list;
     }
 
@@ -85,22 +85,19 @@ public class ArticleDaoImpl implements ArticleDao {
     
     @Override
     public long getNumberOfArticlesAfterDate(Date date, User user) {
-	String sql = "select count(*) FROM Article AS A WHERE A.publishDate > :endDate";
+	Disjunction disjunction = Restrictions.disjunction();
 	if (user!=null){
 	    Set<Source>sources = user.getSources();
-	    sql = sql + " AND ( ";
-	    StringBuffer sb = new StringBuffer(sql);
-		for (Source s: sources){
-		    sb.append("A.url LIKE \'%"+s.getHost()+"%\' OR ");
-		}
-	    sb.delete(sb.length() - 3, sb.length());
-	    sb.append(")");
-	    sql = sb.toString();
+	    for (Source source: sources){
+		disjunction.add(Restrictions.like("url", source.getHost(), MatchMode.ANYWHERE));
+	    }
 	}
 	long result = (long) sessionFactory.getCurrentSession()
-	.createQuery(sql)
-	.setParameter("endDate", date)
-	.uniqueResult();
+		.createCriteria(Article.class)
+		.add(Restrictions.ge("publishDate", date))
+		.add(disjunction)
+		.setProjection(Projections.rowCount())
+		.uniqueResult();
 	return result;
     }
 }

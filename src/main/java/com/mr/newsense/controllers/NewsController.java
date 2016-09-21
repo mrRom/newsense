@@ -60,16 +60,16 @@ public class NewsController {
 	    for (Source s: sources){
 		sites.add(s.getHost());
 	    }
-	    log.info("Sources:" + sites);
+	    log.debug("Sources:" + sites);
 	}
 	List<Article> articles = articleDao.getMoreArticles(quantity, step, sites);
+	if(articles.isEmpty()){
+            return new ResponseEntity<List<Article>>(HttpStatus.NO_CONTENT);
+        }
 	if (step == 0){
 	    request.getSession().setAttribute("lastShowedArticle", articles.get(0));
 	    log.info(request.getSession().getAttribute("lastShowedArticle").toString());
 	}
-        if(articles.isEmpty()){
-            return new ResponseEntity<List<Article>>(HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<List<Article>>(articles, HttpStatus.OK);
     }
 }
