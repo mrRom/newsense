@@ -24,6 +24,8 @@ public class User extends Model{
     @Column(nullable = false, length = 60)
     private String password;
     @Column (nullable = false)
+    private String email;
+    @Column (nullable = false)
     private boolean enabled;
     
     @ManyToMany (fetch = FetchType.EAGER, cascade=CascadeType.ALL)
@@ -38,6 +40,7 @@ public class User extends Model{
     
     public User() {
 	super();
+	this.enabled=false;
     }
     
     public User(Long id) {
@@ -80,10 +83,18 @@ public class User extends Model{
     public void setUserRole(Set<UserRole> userRole) {
         this.userRole = userRole;
     }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public String toString() {
-	return "User [username=" + username + ", password="
-		+ password + ", enabled=" + enabled + "]";
+	return "User [username=" + username + ", password=" + password
+		+ ", email=" + email + ", enabled=" + enabled + ", userRole="
+		+ userRole + "]";
     }
 }

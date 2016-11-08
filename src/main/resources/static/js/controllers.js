@@ -175,7 +175,7 @@ newsense.controller('registration', function($location, UserService) {
 	self.dataLoading = true;
 	self.register = function() {
 		self.dataLoading = true;
-        UserService.createUser(self.username, self.password)
+        UserService.createUser(self.username, self.password, self.email)
             .then(function (response) {
                 if (response.success) {
                     $location.path('/login');

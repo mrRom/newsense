@@ -1,4 +1,4 @@
-package com.mr.newsense;
+package com.mr.newsense.services;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mr.newsense.dao.TokenDao;
 import com.mr.newsense.dao.UserDao;
 import com.mr.newsense.models.User;
 import com.mr.newsense.models.UserRole;
@@ -23,6 +24,9 @@ public class MyUserDetailsService implements UserDetailsService{
 
     @Autowired
     private UserDao userDao;
+    
+    @Autowired
+    private TokenDao tokenDao;
     
     @Transactional(readOnly=true)
     @Override

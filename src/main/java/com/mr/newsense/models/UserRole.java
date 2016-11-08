@@ -11,11 +11,11 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "user_roles",
 	uniqueConstraints = @UniqueConstraint(
-		columnNames = { "role", "username" }))
+		columnNames = { "role", "user_id" }))
 public class UserRole extends Model{
     private static final long serialVersionUID = 1967973492840525173L;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "username", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column(name = "role", nullable = false, length = 45)
     private String role;

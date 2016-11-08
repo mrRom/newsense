@@ -97,12 +97,13 @@ public class UiApplication {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 	    //TODO
-	    //have to implement proper security
+	    //have to implement better security
 	    http.httpBasic()
 		    .and()
 		    .authorizeRequests()
 		    .antMatchers("/index.html", "/home.html", "/login.html",
-			    "/registration.html", "/register", "/news/**",
+			    "/registration.html", "/register",
+			    "/registrationConfirm","/news/**",
 			    "/stats/**", "/notify", "/listOfSites", "/")
 		    .permitAll().anyRequest().authenticated().and().csrf()
 		    .csrfTokenRepository(csrfTokenRepository()).and()
@@ -139,5 +140,4 @@ public class UiApplication {
 	    return repository;
 	}
     }
-
 }

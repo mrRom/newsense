@@ -42,7 +42,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(User user) {
-	sessionFactory.getCurrentSession().update(user);
+	sessionFactory.getCurrentSession().merge(user);
     }
 
     @Override
@@ -50,5 +50,11 @@ public class UserDaoImpl implements UserDao {
 	sessionFactory.getCurrentSession().delete(
 		sessionFactory.getCurrentSession()
 		.contains(user) ? user : sessionFactory.getCurrentSession().merge(user));
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+	return (User)sessionFactory.getCurrentSession().createCriteria(User.class)
+		.add(Restrictions.eq("email", email)).uniqueResult();
     }
 }

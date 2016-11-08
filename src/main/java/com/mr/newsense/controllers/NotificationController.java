@@ -18,6 +18,8 @@ import com.mr.newsense.models.User;
 
 @RestController
 public class NotificationController {
+    //TODO
+    //Has to do some tests
     private static final Logger log = LoggerFactory
 	    .getLogger(NewsController.class);
     @Autowired

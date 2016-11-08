@@ -102,8 +102,8 @@ newsense.factory('UserService', function($http) {
 
 	return service;
 
-	function createUser(username, password) {
-		var userdata = '{"username":"' + username + '", "password":"' + password + '"}';
+	function createUser(username, password, email) {
+		var userdata = '{"username":"' + username + '", "password":"' + password + '", "email":"' + email +'"}';
 		console.log(userdata);
 		return $http.post('/register', userdata).then(handleSuccess,
 				handleError('Error creating user'));
