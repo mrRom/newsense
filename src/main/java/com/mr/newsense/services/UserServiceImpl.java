@@ -52,7 +52,6 @@ public class UserServiceImpl implements UserService{
 	              "Account with this username already exists: "
 	              + user.getUsername());
 	        }
-	        
 	        user.setPassword(passwordEncoder.encode(user.getPassword()));
 	        user.setEnabled(false);
 	        userDao.createUser(user);
@@ -85,17 +84,11 @@ public class UserServiceImpl implements UserService{
     
     private boolean emailExist(String email) {
         User user = userDao.getUserByEmail(email);
-        if (user != null) {
-            return true;
-        }
-        return false;
+        return user != null ? true: false;
     }
     
     private boolean userNameExist(String userName) {
         User user = userDao.getUserByName(userName);
-        if (user != null) {
-            return true;
-        }
-        return false;
+        return user != null ? true: false;
     }  
 }

@@ -35,7 +35,7 @@ public class User extends Model{
 				nullable = false)})
     private Set<Source> sources = new HashSet<>();
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade=CascadeType.ALL)
     private Set<UserRole> userRole = new HashSet<>();
     
     public User() {
@@ -94,7 +94,7 @@ public class User extends Model{
     @Override
     public String toString() {
 	return "User [username=" + username + ", password=" + password
-		+ ", email=" + email + ", enabled=" + enabled + ", userRole="
-		+ userRole + "]";
+		+ ", email=" + email + ", enabled=" + enabled + ", sources="
+		+ sources + ", userRole=" + userRole + "]";
     }
 }

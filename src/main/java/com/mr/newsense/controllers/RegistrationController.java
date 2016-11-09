@@ -40,7 +40,7 @@ public class RegistrationController {
 	    eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registeredUser, request.getLocale(), getAppUrl(request)));
 	} catch (EmailExistsException | UserNameExistsException e) {
 	    log.info(e.getMessage());
-	    return new ResponseEntity<String>(HttpStatus.OK);
+	    return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 	}
 	log.info("New user was registered:" + user);
 	return new ResponseEntity<String>(HttpStatus.OK); 

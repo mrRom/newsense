@@ -18,23 +18,28 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.mr.newsense.UiApplication;
 import com.mr.newsense.models.Source;
 import com.mr.newsense.models.User;
+import com.mr.newsense.models.UserRole;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = UiApplication.class)
 @ActiveProfiles("test")
 @WebAppConfiguration
 public class UserDaoTest {
-    //TODO have to make some changes
     @Autowired
     UserDao userDao;
+    
     User user = new User();
     Source source = new Source();
+    Set<UserRole> roles = new HashSet<>();
+    UserRole role = new UserRole(user, "ROLE_USER");
     
     @Before
     public void createUserTest(){
 	user.setUsername("test");
 	user.setPassword("test");
 	user.setEmail("test@test.com");
+	roles.add(role);
+	user.setUserRole(roles);
 	user.setEnabled(true);
 	source = new Source();
 	source.setHost("test1");
@@ -52,17 +57,17 @@ public class UserDaoTest {
 	assertTrue(myuser.getSources().contains(source));
     }
 
-/*    @Test
+    @Test
     public void updateUserTest(){
 	User myuser = userDao.getUserByName("test");
 	Source anotherSource = new Source();
 	anotherSource.setHost("test2");
 	anotherSource.setUrl("test2/test2");
 	myuser.getSources().add(anotherSource);
-	userDao.updateUser(user);
+	userDao.updateUser(myuser);
 	User updateduser = userDao.getUserByName("test");
 	assertTrue(updateduser.getSources().contains(anotherSource));
-    }*/
+    }
     
     @After
     public void deleteUserTest(){

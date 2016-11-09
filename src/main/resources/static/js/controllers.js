@@ -180,6 +180,7 @@ newsense.controller('registration', function($location, UserService) {
                 if (response.success) {
                     $location.path('/login');
                 } else {
+                	self.alreadyExists = true;
                     self.dataLoading = false;
                 }
             });
