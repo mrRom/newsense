@@ -15,10 +15,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.mr.newsense.TestUtils;
 import com.mr.newsense.UiApplication;
 import com.mr.newsense.models.Source;
 import com.mr.newsense.models.User;
-import com.mr.newsense.models.UserRole;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = UiApplication.class)
@@ -28,22 +28,12 @@ public class UserDaoTest {
     @Autowired
     UserDao userDao;
     
-    User user = new User();
-    Source source = new Source();
-    Set<UserRole> roles = new HashSet<>();
-    UserRole role = new UserRole(user, "ROLE_USER");
+    TestUtils tu = new TestUtils();
+    User user = tu.createBasicTestUser(); 
+    Source source = tu.createTestSource("test1", "test1/test1");
     
     @Before
     public void createUserTest(){
-	user.setUsername("test");
-	user.setPassword("test");
-	user.setEmail("test@test.com");
-	roles.add(role);
-	user.setUserRole(roles);
-	user.setEnabled(true);
-	source = new Source();
-	source.setHost("test1");
-	source.setUrl("test1/test1");
 	Set<Source> sources = new HashSet<>();
 	sources.add(source);
 	user.setSources(sources);
@@ -60,9 +50,7 @@ public class UserDaoTest {
     @Test
     public void updateUserTest(){
 	User myuser = userDao.getUserByName("test");
-	Source anotherSource = new Source();
-	anotherSource.setHost("test2");
-	anotherSource.setUrl("test2/test2");
+	Source anotherSource = tu.createTestSource("test2", "test2/test2");
 	myuser.getSources().add(anotherSource);
 	userDao.updateUser(myuser);
 	User updateduser = userDao.getUserByName("test");

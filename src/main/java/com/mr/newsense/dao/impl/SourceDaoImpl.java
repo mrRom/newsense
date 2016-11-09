@@ -32,7 +32,10 @@ public class SourceDaoImpl implements SourceDao{
     @SuppressWarnings("unchecked")
     @Override
     public Set<Source> selectSourcesByHostNames(List<String> hosts) {
-	Set<Source> sources;
+	Set<Source> sources = new HashSet<Source>();
+	if (hosts.size() == 0){
+	    return sources;
+	}
 	Disjunction disjunction = Restrictions.disjunction();
 	for (String host: hosts){
 	    disjunction.add(Restrictions.eq("host", host));

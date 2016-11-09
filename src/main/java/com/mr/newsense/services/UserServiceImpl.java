@@ -1,6 +1,8 @@
 package com.mr.newsense.services;
 
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.mr.newsense.dao.TokenDao;
 import com.mr.newsense.dao.UserDao;
 import com.mr.newsense.models.User;
+import com.mr.newsense.models.UserRole;
 import com.mr.newsense.models.VerificationToken;
 import com.mr.newsense.validation.EmailExistsException;
 import com.mr.newsense.validation.UserNameExistsException;
@@ -53,6 +56,10 @@ public class UserServiceImpl implements UserService{
 	              + user.getUsername());
 	        }
 	        user.setPassword(passwordEncoder.encode(user.getPassword()));
+	        UserRole userRole = new UserRole(user, "ROLE_USER");
+	        Set<UserRole> userRoles = new HashSet<>();
+	        userRoles.add(userRole);
+	        user.setUserRole(userRoles);
 	        user.setEnabled(false);
 	        userDao.createUser(user);
 	        return userDao.getUserByName(user.getUsername());
